@@ -3,8 +3,8 @@
 # SteamTasks 🎮
 
 <p align="center">
-  <b>Lightweight game session emulator for Discord Quests & Orbs.</b><br>
-  Automatically completes Discord desktop quests and earns Orbs without downloading tens or hundreds of gigabytes of games.<br><br>
+  <b>Легковесный эмулятор игровых сессий для Discord Quests & Orbs.</b><br>
+  Автоматически выполняет задания Discord и начисляет сферы (Orbs) без необходимости скачивать десятки и сотни гигабайт игр на диск.<br><br>
   <a href="README.ru.md">🇷🇺 Русский</a> • <a href="README.md">🇬🇧 English</a>
 </p>
 
@@ -13,105 +13,6 @@
 [![Discord](https://img.shields.io/badge/Discord-IPC%20v10%20%7C%20Quests-5865F2?logo=discord)](https://discord.com)
 [![UI](https://img.shields.io/badge/UI-Localhost%208787%20%2B%20Win32-ff7a18)](http://127.0.0.1:8787)
 [![License](https://img.shields.io/badge/License-MIT-lightgrey)](LICENSE)
-
-</div>
-
-<a id="english"></a>
-
----
-
-## ⚡ Features
-
-* **100% Discord Quests Completion & Orb Rewards**: Emulates genuine game windows and connects to Discord IPC on the same PID to satisfy Discord's detection pipeline.
-* **Automatic Bypass Engine**:
-  * Exact catalogue binary names and paths from Discord's 24,500+ game database.
-  * Subfolder executables bypass (e.g., Unreal Engine / Frostbite `win64/...` titles like *Marvel Rivals*, *Delta Force*).
-  * EA Sports FC / FIFA series and launcher SKU bypasses.
-  * Epic Games Store registry and SKU simulation.
-* **Automatic Quest Synchronization**: Scans enrolled Discord quests in one click, displays live completion progress and orb rewards, and prepares lightweight worker executables.
-* **Modern Web Dashboard (`http://127.0.0.1:8787`)**:
-  * Graphite dark mode and high-contrast light mode with instant toggle.
-  * English and Russian language support.
-  * Multi-game automated queue with configurable timers (e.g. 15 min per quest).
-  * Instant search across 24,000+ Discord games.
-* **Modern Frameless Window**:
-  * Native Win32 window with hardware DWM frame compositing.
-  * No legacy Windows 7 / Aero title bar artifacts on focus change.
-  * Crisp font rendering and game icon integration.
-
----
-
-## 🚀 Quick Start (English)
-
-### Option 1. Portable Version (No Installation)
-
-1. Open the `dist\worthlesstask` folder (or extract the latest release archive).
-2. Run **`RUN.cmd`** (or `worthlesstask.exe`).
-3. The dashboard will automatically open in your browser: **`http://127.0.0.1:8787`**.
-
-### Option 2. Run from Source (Python)
-
-Requires Python 3.10+:
-
-```powershell
-# Clone the repository
-git clone https://github.com/quazovsky/SteamTasks.git
-cd SteamTasks
-
-# Launch the dashboard
-python -m worthlesstask web --open
-```
-
----
-
-## 🕹️ How to Use
-
-1. **Launch SteamTasks** and make sure Discord is running and logged in on your PC.
-2. In the dashboard, click **«Sync Quests»**:
-   * SteamTasks scans your enrolled Discord quests, displays orb rewards, and sets up worker executables.
-3. Click **«Start»** next to the desired game:
-   * A native game window opens and Discord immediately registers you as "Playing". Time starts counting towards the quest reward.
-4. **Automated Queue**:
-   * Add games to the queue using **«+ Add to queue»**.
-   * Set minutes per game (default is 15 minutes).
-   * Click **«Start Queue»** — SteamTasks will automatically rotate through each game until all quests are complete!
-
----
-
-## 💻 CLI Commands
-
-SteamTasks can also be controlled entirely via command line:
-
-```powershell
-# Check Discord connection and system readiness
-python -m worthlesstask doctor
-
-# Sync active Discord quests
-python -m worthlesstask quests sync --auto-add
-
-# Launch a specific game
-python -m worthlesstask play ea-sports-fc-27
-
-# Run queue with 15-minute intervals
-python -m worthlesstask queue marvel-rivals delta-force --minutes 15 --start
-
-# Stop current session
-python -m worthlesstask stop
-```
-
----
-
-<a id="russian"></a>
-
-<div align="center">
-
-# SteamTasks (Русская версия) 🎮
-
-<p align="center">
-  <b>Легковесный эмулятор игровых сессий для Discord Quests & Orbs.</b><br>
-  Автоматически выполняет задания Discord и начисляет сферы (Orbs) без необходимости скачивать игры на диск.<br><br>
-  <a href="#english">🇬🇧 English</a> • <a href="#steamtasks-">Наверх ↑</a>
-</p>
 
 </div>
 
@@ -138,7 +39,7 @@ python -m worthlesstask stop
 
 ---
 
-## 🚀 Быстрый старт (На русском)
+## 🚀 Быстрый старт
 
 ### Вариант 1. Портативная версия (Без установки)
 
