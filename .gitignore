@@ -1,0 +1,33 @@
+# local configuration — contains your application id and activity strings
+config.json
+worthlesstask.json
+
+# runtime artefacts
+worthlesstask.log
+logs/
+runtime.json
+.cache/
+*.log
+*.lock
+*.worthlesstask.json
+*.bak
+*.rar
+*.zip
+
+# build outputs & binaries
+build/
+dist/
+outputs/
+*.exe
+
+# environment & ide
+.workbuddy-ai/
+.idea/
+.vscode/
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/

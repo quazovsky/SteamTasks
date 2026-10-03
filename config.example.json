@@ -1,0 +1,29 @@
+{
+  "client_id": "357607133254254632",
+  "game_name": "Dead by Daylight",
+  "activity_type": "playing",
+  "details": null,
+  "state": null,
+  "show_elapsed": true,
+  "large_image": null,
+  "large_text": "Dead by Daylight",
+  "small_image": null,
+  "small_text": null,
+  "buttons": [],
+  "party_size": null,
+  "party_id": null,
+  "refresh_interval": 60.0,
+  "command_timeout": 15.0,
+  "handshake_timeout": 20.0,
+  "clear_on_exit": true,
+  "log_level": "INFO",
+  "log_file": "worthlesstask.log",
+  "ipc_path": null,
+  "backoff": {
+    "base_delay": 1.0,
+    "factor": 2.0,
+    "max_delay": 60.0,
+    "jitter": 0.25,
+    "max_attempts": null
+  }
+}
