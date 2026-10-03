@@ -21,27 +21,6 @@
 
 ---
 
-## ⚡ Features
-
-* **100% Discord Quests Completion & Orb Rewards**: Emulates genuine game windows and connects to Discord IPC on the same PID to satisfy Discord's detection pipeline.
-* **Automatic Bypass Engine**:
-  * Exact catalogue binary names and paths from Discord's 24,500+ game database.
-  * Subfolder executables bypass (e.g., Unreal Engine / Frostbite `win64/...` titles like *Marvel Rivals*, *Delta Force*).
-  * EA Sports FC / FIFA series and launcher SKU bypasses.
-  * Epic Games Store registry and SKU simulation.
-* **Automatic Quest Synchronization**: Scans enrolled Discord quests in one click, displays live completion progress and orb rewards, and prepares lightweight worker executables.
-* **Modern Web Dashboard (`http://127.0.0.1:8787`)**:
-  * Graphite dark mode and high-contrast light mode with instant toggle.
-  * English and Russian language support.
-  * Multi-game automated queue with configurable timers (e.g. 15 min per quest).
-  * Instant search across 24,000+ Discord games.
-* **Modern Frameless Window**:
-  * Native Win32 window with hardware DWM frame compositing.
-  * No legacy Windows 7 / Aero title bar artifacts on focus change.
-  * Crisp font rendering and game icon integration.
-
----
-
 ## 🚀 Quick Start (English)
 
 ### Option 1. Portable Version (No Installation)
@@ -116,27 +95,6 @@ python -m worthlesstask stop
 </p>
 
 </div>
-
----
-
-## ⚡ Возможности
-
-* **100% зачёт Discord Quests и начисление сфер**: Эмуляция нативных окон верхнего уровня и подключение к Discord IPC на одном PID для полного прохождения проверок Discord.
-* **Автоматический обход защит (Bypass Engine)**:
-  * Каталожные пути и оригинальные имена процессов из базы Discord (24 500+ игр).
-  * Поддержка подкаталогов (Unreal Engine / Frostbite `win64/...`, например *Marvel Rivals*, *Delta Force*).
-  * Обход лаунчеров для серии EA Sports FC / FIFA.
-  * Эмуляция реестра и манифестов Epic Games Store SKU.
-* **Авто-синхронизация квестов**: В один клик подтягивает активные задания из Discord, отображает прогресс в реальном времени и готовит нужные исполняемые файлы.
-* **Современный веб-дашборд (`http://127.0.0.1:8787`)**:
-  * Графитовая тёмная и контрастная светлая темы с быстрым переключением.
-  * Поддержка русского и английского языков.
-  * Умная очередь игр с таймером авто-переключения (например, по 15 минут на игру).
-  * Поиск по каталогу 24 000+ игр Discord.
-* **Современное окно эмуляции**:
-  * Нативное Win32-окно с аппаратным сглаживанием DWM.
-  * Никаких устаревших рамок Windows 7 / Aero при смене фокуса.
-  * Чёткий рендеринг текста и оригинальная иконка игры.
 
 ---
 
