@@ -65,18 +65,57 @@ class Dashboard:
     def _active_quests(self, force: bool = False) -> list[dict]:
         import time as _time
         now = _time.monotonic()
-        if not force and self._quests_ts and (now - self._quests_ts) < 15.0:
-            return self._quests_cache
+        if not force and self._quests_ts and (now - self._quests_ts) < 5.0:
+            return self._enrich_quests(self._quests_cache)
         try:
             from ..presence.quests import discover_discord_quests
             quests = discover_discord_quests(logger=self.log)
             self._quests_cache = [
-                q.to_dict() for q in quests if not q.completed and not q.is_expired
+                q.to_dict() for q in quests if not q.is_expired
             ]
         except Exception:  # noqa: BLE001
             pass
         self._quests_ts = now
-        return self._quests_cache
+        return self._enrich_quests(self._quests_cache)
+
+    def _enrich_quests(self, quests: list[dict]) -> list[dict]:
+        active = self.manager.status().get("active")
+        if not active or not active.get("uptime_s"):
+            return quests
+        uptime = float(active["uptime_s"])
+        app_id = str(active.get("application_id") or "")
+        slug = str(active.get("slug") or "")
+
+        entry = self.library.get(slug) if slug else None
+        entry_ids = set()
+        if entry:
+            if entry.application_id:
+                entry_ids.add(str(entry.application_id))
+            if getattr(entry, "carrier_app_id", None):
+                entry_ids.add(str(entry.carrier_app_id))
+        if app_id:
+            entry_ids.add(app_id)
+
+        enriched = []
+        for q in quests:
+            item = dict(q)
+            q_ids = set(str(x) for x in (item.get("accepted_app_ids") or ()))
+            if item.get("primary_app_id"):
+                q_ids.add(str(item["primary_app_id"]))
+
+            matches = bool(entry_ids & q_ids)
+            if matches and not item.get("is_completed"):
+                target = int(item.get("target_seconds") or 900)
+                base = int(item.get("progress_seconds") or 0)
+                live_sec = min(target, int(base + uptime))
+                live_pct = min(100, int((live_sec * 100) / target)) if target > 0 else 0
+                item["progress_seconds"] = live_sec
+                item["progress_percent"] = max(int(item.get("progress_percent") or 0), live_pct)
+                if live_sec >= target:
+                    item["is_completed"] = True
+                    item["completed"] = True
+            enriched.append(item)
+        return enriched
 
     def sync_quests(self, auto_add: bool = True) -> dict:
         from ..presence.quests import sync_library_with_discord
@@ -89,16 +128,20 @@ class Dashboard:
         self._active_quests(force=True)
         return {"sync": report, "state": self.status()}
 
-    def start_scheduler(self):
+    def start_scheduler(self, start_slug=None):
         with self._scheduler_lock:
-            if self._scheduler and self._scheduler.is_alive():
-                return False
             queue = self.library.queue
             if not queue:
                 return False
             for slug in queue:
                 self.manager.validate_entry(slug)
-            self.manager.request_play(queue[0])
+            active_slug = self.manager.active_slug
+            target_slug = start_slug or (active_slug if active_slug in queue else queue[0])
+            if active_slug != target_slug:
+                self.manager.request_play(target_slug)
+            self._scheduler_stop.set()
+            if self._scheduler and self._scheduler.is_alive():
+                self._scheduler.join(timeout=1.0)
             self._scheduler_stop = threading.Event()
             self._scheduler = threading.Thread(target=self.manager.run_scheduler,
                 args=(self._scheduler_stop,), name="queue-scheduler", daemon=True)
@@ -385,9 +428,13 @@ class Handler(BaseHTTPRequestHandler):
                         raise ValueError("Некорректный идентификатор игры")
                     return self._json(self.dashboard.set_executable(slug, payload.get("executable", "")))
                 if path == "/api/play":
-                    self.dashboard.manager.validate_entry(payload.get("slug"))
-                    self.dashboard.stop_scheduler()
-                    return self._json(self.dashboard.manager.request_play(payload["slug"]), 202)
+                    slug = payload.get("slug")
+                    self.dashboard.manager.validate_entry(slug)
+                    if slug in self.dashboard.library.queue:
+                        self.dashboard.start_scheduler(start_slug=slug)
+                    else:
+                        self.dashboard.stop_scheduler()
+                    return self._json(self.dashboard.manager.request_play(slug), 202)
                 if path == "/api/stop":
                     self.dashboard.stop_scheduler()
                     return self._json(self.dashboard.manager.request_stop(), 202)

@@ -1,38 +1,127 @@
-# SteamTasks (worthlesstask) 🎮✨
+# SteamTasks 🎮
 
-> **Эмулятор игровых сессий для Discord Quests & Orbs.**  
-> Автоматически выполняет задания Discord и начисляет сферы (Orbs) без необходимости скачивать десятки гигабайт игр на диск.
+> **Lightweight game session emulator for Discord Quests & Orbs.**  
+> Automatically completes Discord desktop quests and earns Orbs without downloading tens or hundreds of gigabytes of games.
 
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011-blue?logo=windows)](https://microsoft.com)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-brightgreen?logo=python)](https://python.org)
 [![Discord](https://img.shields.io/badge/Discord-IPC%20v10%20%7C%20Quests-5865F2?logo=discord)](https://discord.com)
 [![UI](https://img.shields.io/badge/UI-Localhost%208787%20%2B%20Win32-ff7a18)](http://127.0.0.1:8787)
-[![License](https://img.shields.io/badge/License-MIT-lightgrey)]()
+[![License](https://img.shields.io/badge/License-MIT-lightgrey)](LICENSE)
 
 ---
 
-## ⚡ Ключевые возможности
+## ⚡ Features
 
-* **100% зачёт Discord Quests и начисление сфер**: Поддержка всех типов детекта игр Discord (каталог из более чем 24 500+ приложений, эмуляция окон верхнего уровня `ObservedProcess`, IPC handshake на том же PID).
-* **Автоматический обход сложных защит (Bypass Engine)**:
-  * **Каталожные пути**: Подстановка точных названий исполняемых файлов (включая сложные названия с пробелами и спецсимволами).
-  * **Подпапки (Subfolder EXE)**: Обход для игр на Unreal Engine / Frostbite (например, `Marvel Rivals`, `Delta Force`, `win64/marvel-win64-shipping.exe`).
-  * **EA Sports & Origin / EA Desktop**: Корректный обход проверки лаунчеров и дочерних процессов для серии FC / FIFA.
-  * **Epic Games Store SKU**: Эмуляция манифестов и ключей реестра Epic Games для бесшовного детекта.
-* **Авто-синхронизация квестов**: В один клик запрашивает активные квесты из открытого клиента Discord, показывает прогресс в реальном времени (`%` и награды в сферах) и готовит нужные исполняемые файлы.
+* **100% Discord Quests Completion & Orb Rewards**: Emulates genuine game windows and connects to Discord IPC on the same PID to satisfy Discord's detection pipeline.
+* **Automatic Bypass Engine**:
+  * Exact catalogue binary names and paths from Discord's 24,500+ game database.
+  * Subfolder executables bypass (e.g., Unreal Engine / Frostbite `win64/...` titles like *Marvel Rivals*, *Delta Force*).
+  * EA Sports FC / FIFA series and launcher SKU bypasses.
+  * Epic Games Store registry and SKU simulation.
+* **Automatic Quest Synchronization**: Scans enrolled Discord quests in one click, displays live completion progress and orb rewards, and prepares lightweight worker executables.
+* **Modern Web Dashboard (`http://127.0.0.1:8787`)**:
+  * Graphite dark mode and high-contrast light mode with instant toggle.
+  * English and Russian language support.
+  * Multi-game automated queue with configurable timers (e.g. 15 min per quest).
+  * Instant search across 24,000+ Discord games.
+* **Modern Frameless Window**:
+  * Native Win32 window with hardware DWM frame compositing.
+  * No legacy Windows 7 / Aero title bar artifacts on focus change.
+  * Crisp font rendering and game icon integration.
+
+---
+
+## 🚀 Quick Start (English)
+
+### Option 1. Portable Version (No Installation)
+
+1. Open the `dist\worthlesstask` folder (or extract the latest release archive).
+2. Run **`RUN.cmd`** (or `worthlesstask.exe`).
+3. The dashboard will automatically open in your browser: **`http://127.0.0.1:8787`**.
+
+### Option 2. Run from Source (Python)
+
+Requires Python 3.10+:
+
+```powershell
+# Clone the repository
+git clone https://github.com/quazovsky/SteamTasks.git
+cd SteamTasks
+
+# Launch the dashboard
+python -m worthlesstask web --open
+```
+
+---
+
+## 🕹️ How to Use
+
+1. **Launch SteamTasks** and make sure Discord is running and logged in on your PC.
+2. In the dashboard, click **«Sync Quests»**:
+   * SteamTasks scans your enrolled Discord quests, displays orb rewards, and sets up worker executables.
+3. Click **«Start»** next to the desired game:
+   * A native game window opens and Discord immediately registers you as "Playing". Time starts counting towards the quest reward.
+4. **Automated Queue**:
+   * Add games to the queue using **«+ Add to queue»**.
+   * Set minutes per game (default is 15 minutes).
+   * Click **«Start Queue»** — SteamTasks will automatically rotate through each game until all quests are complete!
+
+---
+
+## 💻 CLI Commands
+
+SteamTasks can also be controlled entirely via command line:
+
+```powershell
+# Check Discord connection and system readiness
+python -m worthlesstask doctor
+
+# Sync active Discord quests
+python -m worthlesstask quests sync --auto-add
+
+# Launch a specific game
+python -m worthlesstask play ea-sports-fc-27
+
+# Run queue with 15-minute intervals
+python -m worthlesstask queue marvel-rivals delta-force --minutes 15 --start
+
+# Stop current session
+python -m worthlesstask stop
+```
+
+---
+---
+
+# SteamTasks (Русская версия) 🎮
+
+> **Легковесный эмулятор игровых сессий для Discord Quests & Orbs.**  
+> Автоматически выполняет задания Discord и начисляет сферы (Orbs) без необходимости скачивать десятки и сотни гигабайт игр на диск.
+
+---
+
+## ⚡ Возможности
+
+* **100% зачёт Discord Quests и начисление сфер**: Эмуляция нативных окон верхнего уровня и подключение к Discord IPC на одном PID для полного прохождения проверок Discord.
+* **Автоматический обход защит (Bypass Engine)**:
+  * Каталожные пути и оригинальные имена процессов из базы Discord (24 500+ игр).
+  * Поддержка подкаталогов (Unreal Engine / Frostbite `win64/...`, например *Marvel Rivals*, *Delta Force*).
+  * Обход лаунчеров для серии EA Sports FC / FIFA.
+  * Эмуляция реестра и манифестов Epic Games Store SKU.
+* **Авто-синхронизация квестов**: В один клик подтягивает активные задания из Discord, отображает прогресс в реальном времени и готовит нужные исполняемые файлы.
 * **Современный веб-дашборд (`http://127.0.0.1:8787`)**:
-  * Тёмная (графит + тёплая бронза) и чистая светлая темы с мгновенным переключением.
-  * Поддержка двух языков: Русский и Английский.
+  * Графитовая тёмная и контрастная светлая темы с быстрым переключением.
+  * Поддержка русского и английского языков.
   * Умная очередь игр с таймером авто-переключения (например, по 15 минут на игру).
-  * Поиск по каталогу 24 000+ игр Discord и добавление в библиотеку в один клик.
-* **Идеальное окно эмуляции (Modern Frameless Window)**:
-  * Полностью переработанное нативное Win32-окно с аппаратным DWM compositing.
-  * Никаких артефактов и рамок «Windows 7 / Aero» при переключении фокуса.
-  * Плавный рендеринг текста без рваных краёв и артефактов.
+  * Поиск по каталогу 24 000+ игр Discord.
+* **Современное окно эмуляции**:
+  * Нативное Win32-окно с аппаратным сглаживанием DWM.
+  * Никаких устаревших рамок Windows 7 / Aero при смене фокуса.
+  * Чёткий рендеринг текста и оригинальная иконка игры.
 
 ---
 
-## 🚀 Быстрый старт (Вкратце)
+## 🚀 Быстрый старт (На русском)
 
 ### Вариант 1. Портативная версия (Без установки)
 
@@ -58,21 +147,19 @@ python -m worthlesstask web --open
 ## 🕹️ Как пользоваться
 
 1. **Запустите SteamTasks** и убедитесь, что приложение Discord запущено на компьютере.
-2. В веб-панели нажмите кнопку **«Синхронизировать квесты»** (`Sync Quests`):
-   * SteamTasks автоматически определит ваши взятые задания Discord, покажет награды и создаст нужные мини-воркеры.
+2. В веб-панели нажмите кнопку **«Синхронизировать задания»** (`Sync Quests`):
+   * SteamTasks автоматически определит ваши активные квесты Discord, покажет награды и создаст нужные мини-воркеры.
 3. Нажмите **«Запустить»** (`Start`) напротив нужной игры:
    * Откроется аккуратное окно эмулятора игры.
-   * Discord моментально определит статус «Играет в...» и начнет засчитывать время для задания.
+   * Discord моментально определит статус «Играет в...» и начнет начислять время.
 4. **Очередь заданий (Queue)**:
-   * Добавьте несколько игр в очередь кнопкой `+ Очередь`.
+   * Добавьте несколько игр в очередь кнопкой **«+ В очередь»**.
    * Укажите время на игру (по умолчанию 15 минут).
-   * Нажмите **«Запустить очередь»** — SteamTasks сам поочередно запустит каждую игру и соберет все сферы без вашего участия!
+   * Нажмите **«Запустить очередь»** — программа сама поочередно выполнит все квесты и остановится, когда всё будет готово!
 
 ---
 
-## 🛠️ Управление через консоль (CLI)
-
-SteamTasks также полностью управляется из командной строки:
+## 💻 Управление через консоль (CLI)
 
 ```powershell
 # Проверить подключение к Discord и готовность системы
@@ -93,45 +180,6 @@ python -m worthlesstask stop
 
 ---
 
-## 🧠 Как устроен обход Discord (Архитектура)
+## 📄 License / Лицензия
 
-### 1. Rich Presence vs ObservedProcess
-Задания Discord («Сыграйте 15 минут») проверяются **не только по Discord RPC**.  
-Внутри Discord работает нативный модуль детекта:
-```
-SetObservedGamesCallback2(std::vector<discord::util::ObservedProcess>, n::Function)
-```
-Discord сканирует запущенные процессы и опрашивает **окна верхнего уровня**: имя бинарника, заголовок окна, стиль окна, активность. Если запустить только фоновый RPC без видимого окна соответствующего процесса — квест **не засчитается**.
-
-SteamTasks решает эту проблему в комплексе:
-1. Создаёт ультра-лёгкий рабочий процесс (`worker`) с точным именем бинарника игры из каталога Discord (`24 500+` записей).
-2. Создаёт настоящее Win32-окно с заголовком игры и DWM-композитингом.
-3. Подключается к локальному каналу `\\.\pipe\discord-ipc-0` из того же самого процесса, передавая Discord handshake с оригинальным `application_id`.
-
-### 2. Поддержка вложенных путей и движков
-Многие современные игры (на движке Unreal Engine 5 или лаунчерах EA/Epic) запускаются из подкаталогов:
-* `win64/marvel-win64-shipping.exe`
-* `win64/deltaforceclient-win64-shipping.exe`
-* `fc26.exe` / `fc27.exe`
-
-SteamTasks умеет динамически генерировать правильную структуру папок для каждого рабочего процесса, что гарантирует точное совпадение с путями из белого списка Discord.
-
----
-
-## 📁 Структура проекта
-
-* `worthlesstask/` — ядро приложения:
-  * `web/` — локальный HTTP-сервер, REST API и встроенный веб-интерфейс (`page.py`, `i18n.py`).
-  * `ui/` — реализация нативного Win32-окна (`window.py`) с обработкой сообщений DWM, DPI-масштабированием и отсутствием устаревших рамок Aero.
-  * `presence/` — валидатор активности и резолвер идентификаторов приложений Discord.
-  * `rpc/` — асинхронный overlapped-транспорт по Named Pipe Discord IPC.
-  * `decoy.py` — генератор и диспетчер специализированных воркеров игр.
-  * `library.py` — локальная база добавленных игр и каталога Discord.
-* `tools/build-portable.cjs` — сборщик автономного переносимого дистрибутива.
-* `tests/` — комплексный набор из 440+ модульных тестов.
-
----
-
-## 📄 Лицензия
-
-Распространяется под свободной лицензией MIT. Используйте во благо!
+Distributed under the MIT License. Распространяется под лицензией MIT.

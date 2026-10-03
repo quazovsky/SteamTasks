@@ -661,40 +661,75 @@ class PresenceManager:
         return _window_cache.set(visible_windows())
 
     def _close_windows_of(self, instance):
-        """Ask every window belonging to this worker to close.
-
-        Matched by image path, not pid: a one-file PyInstaller worker runs the real
-        application as a child of its bootloader, so the window is owned by a
-        different process than the one that was spawned. Closing the window is the
-        clean shutdown — the child then exits on its own.
-        """
+        """Ask every window belonging to this worker to close."""
         from .ui.inspect import process_image_path, visible_windows
 
         wanted = os.path.normcase(instance.image_path) if instance.image_path else None
+        target_pids = {instance.pid} if getattr(instance, "pid", None) else set()
+        if getattr(instance, "worker_pid", None):
+            target_pids.add(instance.worker_pid)
+        entry = self.library.get(instance.slug) if instance.slug else None
+        target_title = entry.game_name.casefold() if entry else None
+
         posted = 0
         for window in visible_windows():
-            if wanted and os.path.normcase(process_image_path(window.pid) or "") != wanted:
-                continue
-            _user32.PostMessageW(window.hwnd, WM_CLOSE, 0, 0)
-            posted += 1
+            matches = False
+            if window.pid in target_pids:
+                matches = True
+            elif target_title and window.title.casefold() == target_title:
+                matches = True
+            elif wanted:
+                img = process_image_path(window.pid) or ""
+                if os.path.normcase(img) == wanted or (img and os.path.basename(img).casefold() == os.path.basename(wanted).casefold()):
+                    matches = True
+            if matches:
+                _user32.PostMessageW(window.hwnd, WM_CLOSE, 0, 0)
+                posted += 1
         return posted
 
     def _terminate(self, instance):
-        process = instance.process
-        if process.poll() is not None:
+        if instance is None:
+            return
+        process = getattr(instance, "process", None)
+        if process and process.poll() is not None:
             return
         try:
             if os.name == "nt" and self._close_windows_of(instance):
                 try:
-                    process.wait(timeout=5)
-                    return
-                except subprocess.TimeoutExpired:
+                    if process:
+                        process.wait(timeout=1)
+                        return
+                except (subprocess.TimeoutExpired, AttributeError, TypeError):
                     pass
-            process.terminate()
-            process.wait(timeout=5)
-        except subprocess.TimeoutExpired:
-            process.kill()
-            process.wait(timeout=5)
+            if process:
+                process.terminate()
+                try:
+                    process.wait(timeout=2)
+                except Exception:
+                    pass
+        except (subprocess.TimeoutExpired, AttributeError, TypeError):
+            if process:
+                try:
+                    process.kill()
+                    process.wait(timeout=2)
+                except Exception:
+                    pass
+        finally:
+            if os.name == "nt":
+                worker_pid = getattr(instance, "worker_pid", None)
+                if isinstance(worker_pid, int) and worker_pid != getattr(instance, "pid", None):
+                    try:
+                        subprocess.run(["taskkill", "/F", "/PID", str(worker_pid)],
+                                       capture_output=True, timeout=2)
+                    except Exception:
+                        pass
+                pid = getattr(instance, "pid", None)
+                if isinstance(pid, int) and (not process or process.poll() is None):
+                    try:
+                        subprocess.run(["taskkill", "/F", "/T", "/PID", str(pid)],
+                                       capture_output=True, timeout=2)
+                    except Exception:
+                        pass
 
     def clear_session(self):
         """Stop every worker and forget the session record.
@@ -718,22 +753,27 @@ class PresenceManager:
         return self.library.set_queue(list(dict.fromkeys(slugs)))
 
     def _seconds_until_switch(self):
-        instance = self._instance
-        if not instance or not self.library.queue:
+        workers = self._running_workers()
+        if not workers or not self.library.queue:
             return None
-        entry = self.library.get(instance.slug)
+        active = workers[-1]
+        entry = self.library.get(active.slug)
         if not entry:
             return None
-        return round(max(0, entry.duration_minutes*60 - (self._clock()-instance.started_at)), 1)
+        duration = (entry.duration_minutes or 15) * 60
+        elapsed = self._clock() - active.started_at
+        return round(max(0.0, duration - elapsed), 1)
 
     def advance(self, reason="queue"):
         queue = self.library.queue
         if not queue:
             return None
         current = self.active_slug
-        nxt = queue[(queue.index(current)+1) % len(queue)] if current in queue else queue[0]
+        nxt = queue[(queue.index(current) + 1) % len(queue)] if current in queue else queue[0]
         if nxt == current:
             self.stop()
+            return None
+        self.log.info("advancing queue to next game", extra={"current": current, "next": nxt})
         return self.play(nxt, reason=reason)
 
     def tick(self):
