@@ -8,6 +8,7 @@
   <a href="README.ru.md">🇷🇺 Русский</a> • <a href="README.md">🇬🇧 English</a>
 </p>
 
+[![Release](https://img.shields.io/github/v/release/quazovsky/SteamTasks?logo=github&color=ff7a18)](https://github.com/quazovsky/SteamTasks/releases)
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011-blue?logo=windows)](https://microsoft.com)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-brightgreen?logo=python)](https://python.org)
 [![Discord](https://img.shields.io/badge/Discord-IPC%20v10%20%7C%20Quests-5865F2?logo=discord)](https://discord.com)
@@ -43,9 +44,10 @@
 
 ### Вариант 1. Портативная версия (Без установки)
 
-1. Откройте папку `dist\worthlesstask` (или распакуйте архив релиза).
-2. Запустите **`RUN.cmd`** (или `worthlesstask.exe`).
-3. В браузере автоматически откроется дашборд: **`http://127.0.0.1:8787`**.
+1. Скачайте архив **`SteamTasks-v3.1.0-portable.zip`** из раздела [GitHub Releases](https://github.com/quazovsky/SteamTasks/releases/latest).
+2. Распакуйте архив в любую папку.
+3. Запустите **`RUN.cmd`** (или `worthlesstask.exe`).
+4. В браузере автоматически откроется дашборд: **`http://127.0.0.1:8787`**.
 
 ### Вариант 2. Запуск из исходников (Python)
 
